@@ -1,5 +1,6 @@
 // API service for connecting to the Java backend
-const API_BASE_URL = 'http://localhost:3030/interview-portal/api/experiences';
+//const API_BASE_URL = 'http://localhost:3030/interview-portal/api/experiences';
+const API_BASE_URL = 'https://interview-experience-portal-dhey.onrender.com/api/experiences';
 
 class ApiService {
   // Helper method to handle API responses
