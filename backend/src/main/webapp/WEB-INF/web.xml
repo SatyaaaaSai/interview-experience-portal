@@ -30,6 +30,15 @@
         <url-pattern>/api/reviews/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>AdminLoginServlet</servlet-name>
+        <servlet-class>com.interviewportal.servlet.AdminLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminLoginServlet</servlet-name>
+        <url-pattern>/api/admin/login</url-pattern>
+    </servlet-mapping>
+
     <!-- CORS Filter -->
     <filter>
         <filter-name>CORSFilter</filter-name>

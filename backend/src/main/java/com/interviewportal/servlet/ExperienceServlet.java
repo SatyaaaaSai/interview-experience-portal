@@ -242,6 +242,16 @@ public class ExperienceServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         String pathInfo = request.getPathInfo();
         PrintWriter out = response.getWriter();
+
+        // Admin token check
+        String authHeader = request.getHeader("Authorization");
+        final String ADMIN_TOKEN = "SECRET_ADMIN_TOKEN";
+        if (authHeader == null || !authHeader.equals("Bearer " + ADMIN_TOKEN)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            out.print("{\"error\": \"Unauthorized: Admin token required\"}");
+            return;
+        }
+
         if (pathInfo == null || !pathInfo.matches("/\\d+")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print("{\"error\": \"Invalid ID\"}");

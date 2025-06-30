@@ -3,3 +3,4 @@ com\interviewportal\model\Experience.class
 com\interviewportal\servlet\ReviewServlet.class
 com\interviewportal\servlet\ExperienceServlet.class
 com\interviewportal\util\SimpleJDBCUtil.class
+com\interviewportal\servlet\AdminLoginServlet.class
