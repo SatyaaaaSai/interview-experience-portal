@@ -1,12 +1,11 @@
-# Use official Tomcat image
-FROM tomcat:9.0
+# Use official Tomcat 10 image
+FROM tomcat:10.1
 
-# Clean default apps
+# Remove default apps
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy WAR file into Tomcat
+# Copy WAR into Tomcat
 COPY target/interview-portal.war /usr/local/tomcat/webapps/ROOT.war
 
-# Optional: expose your custom port
-EXPOSE 3030
+EXPOSE 8080
 
