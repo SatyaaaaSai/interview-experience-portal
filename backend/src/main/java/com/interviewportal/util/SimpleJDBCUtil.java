@@ -5,9 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class SimpleJDBCUtil {
-    private static final String URL = "jdbc:mysql://localhost:3306/interview_portal";
+    // private static final String URL = "jdbc:mysql://localhost:3306/interview_portal";
+    // private static final String USERNAME = "root";
+    // private static final String PASSWORD = "satya";
+    private static final String URL = "jdbc:mysql://nozomi.proxy.rlwy.net:50333/railway";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "satya";
+    private static final String PASSWORD = "FpqQpFogDppaiKVwsHxGqYlayojzEbWo";
 
     static {
         try {

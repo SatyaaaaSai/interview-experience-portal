@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import apiService from '../services/api';
 
+function safeFormatDate(dateString, options = {}) {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return 'N/A';
+  return date.toLocaleString(undefined, options);
+}
+
 const UserExperience = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -68,7 +75,7 @@ const UserExperience = () => {
               {experience.anonymous || experience.name === 'Anonymous' ? 'Anonymous' : experience.name}
             </span>
             <div className="text-sm text-gray-400">
-              {new Date(experience.createdAt).toLocaleDateString()} at {new Date(experience.createdAt).toLocaleTimeString()}
+              {safeFormatDate(experience.createdAt, { dateStyle: 'medium', timeStyle: 'short' })}
             </div>
           </div>
         </div>
@@ -132,9 +139,9 @@ const UserExperience = () => {
             <p><strong>Company:</strong> {experience.company}</p>
             <p><strong>Role:</strong> {experience.role}</p>
             <p><strong>Year:</strong> {experience.year}</p>
-            <p><strong>Posted:</strong> {new Date(experience.createdAt).toLocaleString()}</p>
+            <p><strong>Posted:</strong> {safeFormatDate(experience.createdAt)}</p>
             {experience.updatedAt !== experience.createdAt && (
-              <p><strong>Last Updated:</strong> {new Date(experience.updatedAt).toLocaleString()}</p>
+              <p><strong>Last Updated:</strong> {safeFormatDate(experience.updatedAt)}</p>
             )}
           </div>
         </div>

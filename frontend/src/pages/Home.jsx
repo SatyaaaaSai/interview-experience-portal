@@ -4,6 +4,19 @@ import apiService from '../services/api';
 
 const defaultCompanies = ['All', 'TCS', 'Tech Mahindra'];
 
+function getTimeAgo(dateString, now) {
+  if (!dateString) return 'Unknown';
+  const date = new Date(dateString.endsWith('Z') ? dateString : dateString + 'Z');
+  if (isNaN(date.getTime())) return 'Unknown';
+  const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+  if (diffInMinutes < 1) return 'Just now';
+  if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+}
+
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCompany, setSelectedCompany] = useState('All');
@@ -77,19 +90,6 @@ const Home = () => {
   const truncate = (text, maxLength = 120) => {
     if (!text || text.length <= maxLength) return text;
     return text.slice(0, maxLength) + '...';
-  };
-
-  // Format time ago
-  const getTimeAgo = (dateString, now) => {
-    // Ensure UTC parsing by adding 'Z' if missing
-    const date = new Date(dateString.endsWith('Z') ? dateString : dateString + 'Z');
-    const diffInMinutes = Math.floor((now - date) / (1000 * 60));
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
   };
 
   if (loading) {

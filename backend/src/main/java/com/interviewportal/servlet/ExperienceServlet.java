@@ -53,7 +53,15 @@ public class ExperienceServlet extends HttpServlet {
                         exp.setTechnicalQuestions(rs.getString("technical_questions"));
                         exp.setHrQuestions(rs.getString("hr_questions"));
                         exp.setStatus(rs.getString("status"));
-                        // createdAt and updatedAt can be handled as strings or converted if needed
+                        // Handle created_At and updated_At as ISO 8601 strings
+                        String createdAtStr = rs.getString("created_At");
+                        String updatedAtStr = rs.getString("updated_At");
+                        if (createdAtStr != null) {
+                            exp.setCreatedAt(java.time.LocalDateTime.parse(createdAtStr, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                        }
+                        if (updatedAtStr != null) {
+                            exp.setUpdatedAt(java.time.LocalDateTime.parse(updatedAtStr, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                        }
                         String jsonResponse = objectMapper.writeValueAsString(exp);
                         out.print(jsonResponse);
                     } else {
@@ -88,7 +96,15 @@ public class ExperienceServlet extends HttpServlet {
                     exp.setTechnicalQuestions(rs.getString("technical_questions"));
                     exp.setHrQuestions(rs.getString("hr_questions"));
                     exp.setStatus(rs.getString("status"));
-                    // createdAt and updatedAt can be handled as strings or converted if needed
+                    // Handle created_At and updated_At as ISO 8601 strings
+                    String createdAtStr = rs.getString("created_At");
+                    String updatedAtStr = rs.getString("updated_At");
+                    if (createdAtStr != null) {
+                        exp.setCreatedAt(java.time.LocalDateTime.parse(createdAtStr, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    }
+                    if (updatedAtStr != null) {
+                        exp.setUpdatedAt(java.time.LocalDateTime.parse(updatedAtStr, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    }
                     experiences.add(exp);
                 }
                 System.out.println("[DEBUG] Experiences fetched: " + experiences.size());
@@ -121,7 +137,7 @@ public class ExperienceServlet extends HttpServlet {
             Experience experience = objectMapper.readValue(jsonBody, Experience.class);
             try (var conn = SimpleJDBCUtil.getConnection();
                  var stmt = conn.prepareStatement(
-                    "INSERT INTO experiences (name, anonymous, year, company, role, technical_rounds, hr_rounds, technical_questions, hr_questions, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO experiences (name, anonymous, year, company, role, technical_rounds, hr_rounds, technical_questions, hr_questions, status, created_At, updated_At) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     java.sql.Statement.RETURN_GENERATED_KEYS)) {
                 stmt.setString(1, experience.getName());
                 stmt.setBoolean(2, experience.isAnonymous());
@@ -133,6 +149,10 @@ public class ExperienceServlet extends HttpServlet {
                 stmt.setString(8, experience.getTechnicalQuestions());
                 stmt.setString(9, experience.getHrQuestions());
                 stmt.setString(10, experience.getStatus());
+                // Set created_At and updated_At as ISO 8601 strings
+                String now = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                stmt.setString(11, now);
+                stmt.setString(12, now);
                 int affectedRows = stmt.executeUpdate();
                 if (affectedRows == 0) {
                     throw new SQLException("Creating experience failed, no rows affected.");
@@ -179,7 +199,7 @@ public class ExperienceServlet extends HttpServlet {
             experience.setId(id);
             try (var conn = SimpleJDBCUtil.getConnection();
                  var stmt = conn.prepareStatement(
-                    "UPDATE experiences SET name=?, anonymous=?, year=?, company=?, role=?, technical_rounds=?, hr_rounds=?, technical_questions=?, hr_questions=?, status=? WHERE id=?")) {
+                    "UPDATE experiences SET name=?, anonymous=?, year=?, company=?, role=?, technical_rounds=?, hr_rounds=?, technical_questions=?, hr_questions=?, status=?, updated_At=? WHERE id=?")) {
                 stmt.setString(1, experience.getName());
                 stmt.setBoolean(2, experience.isAnonymous());
                 stmt.setInt(3, experience.getYear());
@@ -190,7 +210,10 @@ public class ExperienceServlet extends HttpServlet {
                 stmt.setString(8, experience.getTechnicalQuestions());
                 stmt.setString(9, experience.getHrQuestions());
                 stmt.setString(10, experience.getStatus());
-                stmt.setInt(11, experience.getId());
+                // Set updated_At as ISO 8601 string
+                String now = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                stmt.setString(11, now);
+                stmt.setInt(12, experience.getId());
                 int affectedRows = stmt.executeUpdate();
                 if (affectedRows > 0) {
                     out.print("{\"message\": \"Experience updated successfully\"}");
